@@ -3,15 +3,8 @@
 // For Render: https://fullstack-backend.onrender.com
 const API = "https://fullstack-backend.onrender.com";
 
-const ADMIN_KEY = "admin123";
+const ADMIN_KEY = "zuheer123";
 
-function getAuthHeaders() {
-    const key = sessionStorage.getItem("auth");
-    if (!key) return {};
-    return {
-        "X-API-Key": key
-    };
-}
 function getAuthHeaders() {
     const key = sessionStorage.getItem("auth");
     if (!key) return {};
@@ -102,10 +95,29 @@ function loadProfile() {
             pName.value = p.name || "";
             pEmail.value = p.email || "";
             pEdu.value = p.education || "";
+        })
+        .catch(err => {
+            profileView.innerHTML = '<p><button onclick="createDefaultProfile()">Create Profile</button></p>';
         });
 }
 
+function createDefaultProfile() {
+    fetch(`${API}/profile`, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            name: "Your Name",
+            email: "your.email@example.com",
+            education: "Your Education"
+        })
+    }).then(() => loadProfile());
+}
+
 function saveProfile() {
+    if (!sessionStorage.getItem("auth")) {
+        alert("You must be logged in as admin to save");
+        return;
+    }
     fetch(`${API}/profile`, {
         method: "PATCH",
         headers: {"Content-Type":"application/json",...getAuthHeaders()},
@@ -114,7 +126,10 @@ function saveProfile() {
             email: pEmail.value,
             education: pEdu.value
         })
-    }).then(() => loadProfile());
+    }).then(r => {
+        if (!r.ok) alert("Failed to save profile");
+        else loadProfile();
+    }).catch(err => alert("Error: " + err));
 }
 
 /* ---------- SKILLS ---------- */
@@ -144,6 +159,10 @@ function loadSkills() {
 }
 
 function addSkill() {
+    if (!sessionStorage.getItem("auth")) {
+        alert("You must be logged in as admin to add skills");
+        return;
+    }
     if (!skillName.value || !skillProf.value) {
         alert("Please enter skill name and proficiency");
         return;
@@ -159,19 +178,27 @@ function addSkill() {
             name: skillName.value,
             proficiency: skillProf.value
         })
-    }).then(() => {
+    }).then(r => {
+        if (!r.ok) throw new Error("Failed to add skill");
         skillName.value = "";
         skillProf.value = "";
         loadSkills();
-    });
+    }).catch(err => alert("Error: " + err));
 }
 
 
 function deleteSkill(id) {
+    if (!sessionStorage.getItem("auth")) {
+        alert("You must be logged in as admin to delete");
+        return;
+    }
     fetch(`${API}/skills/${id}`, {
         method: "DELETE",
         headers: { ...getAuthHeaders() }
-    }).then(() => loadSkills());
+    }).then(r => {
+        if (!r.ok) throw new Error("Failed to delete");
+        loadSkills();
+    }).catch(err => alert("Error: " + err));
 }
 
 /* ---------- PROJECTS ---------- */
@@ -200,20 +227,42 @@ function loadProjects() {
 }
 
 function addProject() {
+    if (!sessionStorage.getItem("auth")) {
+        alert("You must be logged in as admin to add projects");
+        return;
+    }
+    if (!projTitle.value || !projDesc.value) {
+        alert("Please enter project title and description");
+        return;
+    }
     fetch(`${API}/projects`, {
         method: "POST",
         headers: {"Content-Type":"application/json", ...getAuthHeaders()},
         body: JSON.stringify({
             title: projTitle.value,
             description: projDesc.value,
-            links: { link: projLink.value }
+            links: { link: projLink.value || "" }
         })
-    }).then(() => loadProjects());
+    }).then(r => {
+        if (!r.ok) throw new Error("Failed to add project");
+        projTitle.value = "";
+        projDesc.value = "";
+        projLink.value = "";
+        loadProjects();
+    }).catch(err => alert("Error: " + err));
 }
 
 function deleteProject(id) {
+    if (!sessionStorage.getItem("auth")) {
+        alert("You must be logged in as admin to delete");
+        return;
+    }
     fetch(`${API}/projects/${id}`, { method: "DELETE",headers:{...getAuthHeaders()} })
-        .then(() => loadProjects());
+        .then(r => {
+            if (!r.ok) throw new Error("Failed to delete");
+            loadProjects();
+        })
+        .catch(err => alert("Error: " + err));
 }
 updateUI();
 
