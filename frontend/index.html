@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Me-API Playground</title>
+    <span id="adminBadge" style="display:none;">Admin</span>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="floating-icons">
+    <span>⭐</span><span>⚙️</span><span>🚀</span><span>💡</span>
+</div>
+
+<div class="container">
+    <h1>Me-API Playground</h1>
+    <div style="text-align:right">
+        <button onclick="login()">🔒 Admin Login</button>
+        <button onclick="logout()" id="logoutBtn" style="display:none">🚪 Logout</button>
+    </div>
+
+    <!-- PROFILE -->
+    <section class="card">
+        <h2>Profile</h2>
+        <button onclick="toggleProfile()">Load Profile</button>
+
+        <div id="profileView"></div>
+
+        <div class="edit-box">
+            <input id="pName" placeholder="Name">
+            <input id="pEmail" placeholder="Email">
+            <input id="pEdu" placeholder="Education">
+            <button onclick="saveProfile()">Save Profile</button>
+        </div>
+    </section>
+
+    
+<!-- SKILLS -->
+    <section class="card">
+        <h2>Skills</h2>
+        <button onclick="toggleloadSkills()">Load Skills</button>
+
+        <ul id="skills"></ul>
+
+        <div class="edit-box">
+            <input id="skillName" placeholder="Skill name">
+
+            <select id="skillProf">
+                <option value="">Select proficiency</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Medium">Medium</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+
+            <button onclick="addSkill()">Add Skill</button>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="card">
+        <h2>Projects</h2>
+        <button onclick="toggleloadProjects()">Load Projects</button>
+
+        <div id="projects"></div>
+
+        <div class="edit-box">
+            <input id="projTitle" placeholder="Title">
+            <textarea id="projDesc" placeholder="Description"></textarea>
+            <input id="projLink" placeholder="Project Link">
+            <button onclick="addProject()">Add Project</button>
+        </div>
+    </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
