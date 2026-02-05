@@ -1,4 +1,7 @@
-const API = "http://127.0.0.1:8000";
+// Replace with your Render backend URL after deployment
+// For local testing: http://127.0.0.1:8000
+// For Render: https://fullstack-backend.onrender.com
+const API = "https://fullstack-backend.onrender.com";
 
 const ADMIN_KEY = "admin123";
 
